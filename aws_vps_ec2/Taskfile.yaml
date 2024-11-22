@@ -1,0 +1,24 @@
+version: '3'
+tasks:
+  hello:
+    cmds:
+      - echo "Hello task!"
+
+  install_terraform:
+    cmds:
+      - cmd: |
+          wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+      - cmd: |
+          echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+      - cmd: |
+          sudo apt update && sudo apt install -y terraform
+
+  create_aws_resources:
+    cmds:
+      - terraform init
+      - terraform plan
+      - terraform apply
+
+  delete_aws_resources:
+    cmds:
+      - terraform destroy
